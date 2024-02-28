@@ -11,11 +11,16 @@
       agenda.splice(index, 1);
       agenda = [...agenda]; // Update the agenda array to trigger reactivity
     }
+    function handleKeyPress(event) {
+      if (event.key === "Enter") {
+        addAgenda();
+      }
+    }
   </script>
   <main>
     <h1>SvelteKit Agendas App</h1>
     <div class="add-agenda">
-      <input class="agenda-input" bind:value={newAgenda} placeholder="Add a new agenda" />
+      <input class="agenda-input" bind:value={newAgenda} on:keypress={handleKeyPress} placeholder="Add a new agenda" />
       <button class="add-button" on:click={addAgenda}>Add</button>
     </div>
     <ul class="agenda-list">
