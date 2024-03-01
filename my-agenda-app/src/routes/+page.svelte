@@ -1,37 +1,57 @@
 <script>
-    let agenda = [];
-    let newAgenda = '';
-    function addAgenda() {
-      if (newAgenda) {
-        agenda = [...agenda, newAgenda];
-        newAgenda = '';
-      }
+  let agenda = [];
+  let newAgenda = '';
+
+  function addAgenda() {
+    if (newAgenda) {
+      agenda = [...agenda, { text: newAgenda, important: false }];
+      newAgenda = '';
     }
-    function removeAgenda(index) {
-      agenda.splice(index, 1);
-      agenda = [...agenda]; // Update the agenda array to trigger reactivity
+  }
+
+  function toggleImportant(index) {
+    const item = agenda[index];
+    item.important = !item.important;
+
+    agenda.splice(index, 1);
+
+    let insertIndex = agenda.findIndex((a) => !a.important);
+    if (insertIndex === -1) insertIndex = agenda.length;
+
+    agenda.splice(insertIndex, 0, item);
+
+    agenda = [...agenda];
+  }
+
+  function removeAgenda(index) {
+    agenda.splice(index, 1);
+    agenda = [...agenda];
+  }
+
+  function handleKeyPress(event) {
+    if (event.key === 'Enter') {
+      addAgenda();
     }
-    function handleKeyPress(event) {
-      if (event.key === "Enter") {
-        addAgenda();
-      }
-    }
-  </script>
+}
+</script>
   <main>
-    <h1>SvelteKit Agendas App</h1>
-    <div class="add-agenda">
-      <input class="agenda-input" bind:value={newAgenda} on:keypress={handleKeyPress} placeholder="Add a new agenda" />
-      <button class="add-button" on:click={addAgenda}>Add</button>
-    </div>
-    <ul class="agenda-list">
-      {#each agenda as agenda, index (agenda)}
-        <li class="agenda-item">
-          {agenda}
+  <h1>SvelteKit Agendas App</h1>
+  <div class="add-agenda">
+    <input class="agenda-input" bind:value={newAgenda} on:keypress={handleKeyPress} placeholder="Add a new agenda" />
+    <button class="add-button" on:click={addAgenda}>Add</button>
+  </div>
+  <ul class="agenda-list">
+    {#each agenda as item, index (item.text)}
+      <li class="agenda-item">
+        <span class={item.important ? 'important' : ''}>{item.text}</span>
+        <div>
+          <button class="important-button" on:click={() => toggleImportant(index)}>{item.important ? 'Unmark Important' : 'Mark Important'}</button>
           <button class="remove-button" on:click={() => removeAgenda(index)}>Remove</button>
-        </li>
-      {/each}
-    </ul>
-  </main>
+        </div>
+      </li>
+    {/each}
+  </ul>
+</main>
   <style>
     main {
       font-family: Arial, sans-serif;
@@ -77,4 +97,17 @@
       border-radius: 5px;
       cursor: pointer;
     }
-  </style>
+    .important {
+      font-weight: bold;
+      color: #dc3545;
+    }
+
+    .important-button {
+      background-color: #ffc107;
+      color: #333;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-right: 5px;
+    }
+</style>
