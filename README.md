@@ -1,7 +1,5 @@
 # Agendas App
 
-
-
 ## Overview
 
 Our Agendas App is a simple web application designed to help you stay organized and manage your agendas efficiently. Whether you're keeping track of tasks or scheduling events, this app provides a simple and powerful solution for most of your management needs.
